@@ -1,0 +1,22 @@
+{
+    "name": "wilmanbarrios/php-warp",
+    "description": "The PHP wrapper for common array operations.",
+    "authors": [
+        {
+            "name": "Wilman Barrios",
+            "email": "wilmanbarrios@gmail.com"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "src/Warp.php"
+        ]
+    },
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7",
+        "spatie/phpunit-watcher": "^1.5"
+    }
+}
