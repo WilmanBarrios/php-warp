@@ -156,4 +156,22 @@ class WarpTest extends TestCase
     {
         Warp::data();
     }
+
+    /** @test */
+    function it_can_flatten_an_array_of_elements()
+    {
+        $flatten = Warp::data([
+            'user' => 'Wilman',
+            'item' => [
+                'name' => 'Ipod',
+                'amount' => 250,
+            ]
+        ])->flatten();
+
+        $this->assertEquals([
+            'user' => 'Wilman',
+            'name' => 'Ipod',
+            'amount' => 250
+        ], $flatten);
+    }
 }

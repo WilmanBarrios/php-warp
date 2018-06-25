@@ -12,6 +12,11 @@ class Warp
 
 class Space
 {
+    function __construct()
+    {
+        $this->data = [];
+    }
+
     static function new(...$args)
     {
         return new self(...$args);
@@ -27,15 +32,13 @@ class Space
             $args = func_get_args();
         }
 
-        return new USS($args);
+        return $this->space($args);
     }
-}
 
-class USS
-{
-    function __construct($data)
-    {
-        $this->data = $data;
+    function space($data) {
+        return tap($this, function ($warp) use ($data) {
+            return $this->data = $data;
+        });
     }
 
     function get($key = null, $default = null)
@@ -52,7 +55,7 @@ class USS
 
         foreach (explode('.', $key) as $segment) {
             if (! is_array($array) || ! array_key_exists($segment, $array)) {
-                return $this->value($default);
+                return value($default);
             }
             $array = $array[$segment];
         }
@@ -77,12 +80,12 @@ class USS
         });
     }
 
-    public function map($callback = null)
+    function map($callback = null)
     {
         return array_map($callback, $this->data);
     }
 
-    public function filter($callback = null)
+    function filter($callback = null)
     {
         if ($callback == null) {
             return array_filter($this->data);
@@ -91,11 +94,24 @@ class USS
         return array_filter($this->data, $callback);
     }
 
-    function value($value)
+    function flatten()
     {
-        return $value instanceof Closure ? $value() : $value;
+        $return = [];
+        array_walk_recursive($this->data, function ($value, $key) use (&$return) {
+            return ! is_null($value) ? $return[$key] = $value : [];
+        });
+
+        return $return;
     }
 }
 
-
 class WarpInvalidDataException extends \Exception {}
+
+function tap($value, $callback) {
+    $callback($value);
+    return $value;
+}
+
+function value($value) {
+    return $value instanceof Closure ? $value() : $value;
+}
