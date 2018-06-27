@@ -199,4 +199,31 @@ class WarpTest extends TestCase
             'Ipod G3',
         ], $pluck);
     }
+
+    /** @test */
+    function it_can_flatMap_an_array_of_elements()
+    {
+        $flatMap = Warp::data([
+            [
+                'id' => 1,
+                'name' => 'Ipod G1',
+            ],
+            [
+                'id' => 2,
+                'name' => 'Ipod G2',
+            ],
+            [
+                'id' => 3,
+                'name' => 'Ipod G3',
+            ],
+        ])->flatMap(function ($item) {
+            return [$item['name'] => $item['id']];
+        });
+
+        $this->assertEquals([
+            'Ipod G1' => 1,
+            'Ipod G2' => 2,
+            'Ipod G3' => 3,
+        ], $flatMap);
+    }
 }

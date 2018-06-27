@@ -96,12 +96,7 @@ class Space
 
     function flatten()
     {
-        $return = [];
-        array_walk_recursive($this->data, function ($value, $key) use (&$return) {
-            return ! is_null($value) ? $return[$key] = $value : [];
-        });
-
-        return $return;
+        return (new BlackBox($this->data))->array_flatten();
     }
 
     function pluck($value, $key = null)
@@ -145,6 +140,31 @@ class Space
             }
         }
         return $target;
+    }
+
+    function flatMap($callback)
+    {
+        $data = $this->map($callback, $this->data);
+
+        return (new BlackBox($data))->array_flatten();
+    }
+}
+
+class BlackBox
+{
+    function __construct($data)
+    {
+        $this->data = $data;
+    }
+
+    function array_flatten()
+    {
+        $return = [];
+        array_walk_recursive($this->data, function ($value, $key) use (&$return) {
+            return ! is_null($value) ? $return[$key] = $value : [];
+        });
+
+        return $return;
     }
 }
 
