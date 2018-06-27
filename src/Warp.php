@@ -103,6 +103,49 @@ class Space
 
         return $return;
     }
+
+    function pluck($value, $key = null)
+    {
+        $results = [];
+        foreach ($this->data as $item) {
+            $itemValue = $this->data_get($item, $value);
+            if (is_null($key)) {
+                $results[] = $itemValue;
+            } else {
+                $itemKey = $this->data_get($item, $key);
+                $results[$itemKey] = $itemValue;
+            }
+        }
+        return $results;
+    }
+
+    function data_get($target, $key, $default = null)
+    {
+        if (is_null($key)) {
+            return $target;
+        }
+        foreach (explode('.', $key) as $segment) {
+            if (is_array($target)) {
+                if (! array_key_exists($segment, $target)) {
+                    return value($default);
+                }
+                $target = $target[$segment];
+            } elseif ($target instanceof ArrayAccess) {
+                if (! isset($target[$segment])) {
+                    return value($default);
+                }
+                $target = $target[$segment];
+            } elseif (is_object($target)) {
+                if (! isset($target->{$segment})) {
+                    return value($default);
+                }
+                $target = $target->{$segment};
+            } else {
+                return value($default);
+            }
+        }
+        return $target;
+    }
 }
 
 class WarpInvalidDataException extends \Exception {}

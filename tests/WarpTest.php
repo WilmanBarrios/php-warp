@@ -174,4 +174,29 @@ class WarpTest extends TestCase
             'amount' => 250
         ], $flatten);
     }
+
+    /** @test */
+    function it_can_pluck_keys_from_an_array()
+    {
+        $pluck = Warp::data([
+            [
+                'name' => 'Ipod G1',
+                'amount' => 160,
+            ],
+            [
+                'name' => 'Ipod G2',
+                'amount' => 240,
+            ],
+            [
+                'name' => 'Ipod G3',
+                'amount' => 343,
+            ],
+        ])->pluck('name');
+
+        $this->assertEquals([
+            'Ipod G1',
+            'Ipod G2',
+            'Ipod G3',
+        ], $pluck);
+    }
 }
