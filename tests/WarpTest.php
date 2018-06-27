@@ -150,7 +150,7 @@ class WarpTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Warp\WarpInvalidDataException
+     * @expectedException \Warp\InvalidDataException
      */
     function it_can_thrown_an_exception_if_data_is_not_pass()
     {

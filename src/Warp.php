@@ -25,7 +25,7 @@ class Space
     function data($args = null)
     {
         if (func_num_args() == 0) {
-            throw new WarpInvalidDataException();
+            throw new InvalidDataException();
         }
 
         if (func_num_args() > 1) {
@@ -178,7 +178,7 @@ class BlackBox
     }
 }
 
-class WarpInvalidDataException extends \Exception {}
+class InvalidDataException extends \Exception {}
 
 function tap($value, $callback) {
     $callback($value);
