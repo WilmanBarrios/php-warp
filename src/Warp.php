@@ -96,7 +96,7 @@ class Space
 
     function flatten()
     {
-        return (new BlackBox($this->data))->array_flatten();
+        return (new BlackBox($this->data))->flattening();
     }
 
     function pluck($value, $key = null)
@@ -146,7 +146,7 @@ class Space
     {
         $data = $this->map($callback, $this->data);
 
-        return (new BlackBox($data))->array_flatten();
+        return (new BlackBox($data))->flattening();
     }
 
     function groupBy($key)
@@ -167,7 +167,7 @@ class BlackBox
         $this->data = $data;
     }
 
-    function array_flatten()
+    function flattening()
     {
         $return = [];
         array_walk_recursive($this->data, function ($value, $key) use (&$return) {
