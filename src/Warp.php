@@ -148,6 +148,16 @@ class Space
 
         return (new BlackBox($data))->array_flatten();
     }
+
+    function groupBy($key)
+    {
+        $return = [];
+        foreach ($this->data as $val) {
+            $return[$val[$key]][] = $val;
+        }
+
+        return $return;
+    }
 }
 
 class BlackBox

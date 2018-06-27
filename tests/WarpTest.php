@@ -226,4 +226,42 @@ class WarpTest extends TestCase
             'Ipod G3' => 3,
         ], $flatMap);
     }
+
+    /** @test */
+    function it_can_group_an_array_by_key()
+    {
+        $groupBy = Warp::data([
+            [
+                'type' => 1,
+                'name' => 'Ipod G1',
+            ],
+            [
+                'type' => 1,
+                'name' => 'Ipod G2',
+            ],
+            [
+                'type' => 3,
+                'name' => 'Ipod G3',
+            ],
+        ])->groupBy('type');
+
+        $this->assertArraySubset([
+            1 => [
+                [
+                    'type' => 1,
+                    'name' => 'Ipod G1',
+                ],
+                [
+                    'type' => 1,
+                    'name' => 'Ipod G2',
+                ],
+            ],
+            3 => [
+                [
+                    'type' => 3,
+                    'name' => 'Ipod G3',
+                ],
+            ]
+        ], $groupBy);
+    }
 }
