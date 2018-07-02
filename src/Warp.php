@@ -158,6 +158,11 @@ class Space
 
         return $return;
     }
+
+    function merge(...$array)
+    {
+        return array_merge($this->data, ...$array);
+    }
 }
 
 class BlackBox

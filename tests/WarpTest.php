@@ -264,4 +264,20 @@ class WarpTest extends TestCase
             ]
         ], $groupBy);
     }
+
+    /** @test */
+    function it_can_merge_one_array_with_another_array()
+    {
+        $merge = Warp::data([4])->merge([1,2,3]);
+
+        $this->assertEquals([4,1,2,3], $merge);
+    }
+
+    /** @test */
+    function it_can_merge_one_array_with_multiple_arrays()
+    {
+        $merge = Warp::data([4])->merge([1,2,3], [10], [20]);
+
+        $this->assertEquals([4,1,2,3,10,20], $merge);
+    }
 }
