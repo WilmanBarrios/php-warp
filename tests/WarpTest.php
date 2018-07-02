@@ -280,4 +280,30 @@ class WarpTest extends TestCase
 
         $this->assertEquals([4,1,2,3,10,20], $merge);
     }
+
+    /** @test */
+    function it_can_check_if_array_has_a_key()
+    {
+        $hasItem = Warp::data([
+            'item' => [
+                'name' => 'Ipod'
+            ]
+        ])->has('item');
+
+        $hasName = Warp::data([
+            'item' => [
+                'name' => 'Ipod'
+            ]
+        ])->has('item.name');
+
+        $notHasPrice = Warp::data([
+            'item' => [
+                'name' => 'Ipod'
+            ]
+        ])->has('item.price');
+
+        $this->assertTrue($hasItem);
+        $this->assertTrue($hasName);
+        $this->assertFalse($notHasPrice);
+    }
 }

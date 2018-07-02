@@ -63,6 +63,26 @@ class Space
         return $array;
     }
 
+    function has($key)
+    {
+        $array = $this->data;
+
+        if (empty($array) || is_null($key)) {
+            return false;
+        }
+        if (array_key_exists($key, $array)) {
+            return true;
+        }
+        foreach (explode('.', $key) as $segment) {
+            if (! is_array($array) || ! array_key_exists($segment, $array)) {
+                return false;
+            }
+            $array = $array[$segment];
+        }
+
+        return true;
+    }
+
     function count()
     {
         return count($this->data);
