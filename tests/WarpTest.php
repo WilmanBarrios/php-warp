@@ -306,4 +306,29 @@ class WarpTest extends TestCase
         $this->assertTrue($hasName);
         $this->assertFalse($notHasPrice);
     }
+
+    /** @test */
+    function it_can_add_an_element_to_an_array()
+    {
+        $addItem = Warp::data([
+            'item' => [
+                'name' => 'Ipod',
+                'components' => [
+                    'screen'
+                ]
+            ]
+        ])->add('item.components.1', 'speakers');
+
+        $this->assertEquals([
+            'item' => [
+                'name' => 'Ipod',
+                'components' => [
+                    'screen',
+                    'speakers'
+                ]
+            ]
+        ], $addItem);
+    }
+
+    // function it_can_set_a_value_to_an_especific_key() {}
 }

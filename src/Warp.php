@@ -35,7 +35,8 @@ class Space
         return $this->space($args);
     }
 
-    function space($data) {
+    function space($data)
+    {
         return tap($this, function ($warp) use ($data) {
             return $this->data = $data;
         });
@@ -43,24 +44,7 @@ class Space
 
     function get($key = null, $default = null)
     {
-        $array = $this->data;
-
-        if (is_null($key)) {
-            return $array;
-        }
-
-        if (isset($array[$key])) {
-            return $array[$key];
-        }
-
-        foreach (explode('.', $key) as $segment) {
-            if (! is_array($array) || ! array_key_exists($segment, $array)) {
-                return value($default);
-            }
-            $array = $array[$segment];
-        }
-
-        return $array;
+        return BlackBox::new($this->data)->get($key, $default);
     }
 
     function has($key)
@@ -81,6 +65,15 @@ class Space
         }
 
         return true;
+    }
+
+    function add($key, $value = null)
+    {
+        if (is_null(get($this->data, $key))) {
+            set($this->data, $key, $value);
+        }
+
+        return $this->data;
     }
 
     function count()
@@ -116,7 +109,7 @@ class Space
 
     function flatten()
     {
-        return (new BlackBox($this->data))->flattening();
+        return BlackBox::new($this->data)->flatten();
     }
 
     function pluck($value, $key = null)
@@ -166,7 +159,7 @@ class Space
     {
         $data = $this->map($callback, $this->data);
 
-        return (new BlackBox($data))->flattening();
+        return BlackBox::new($data)->flatten();
     }
 
     function groupBy($key)
@@ -192,7 +185,17 @@ class BlackBox
         $this->data = $data;
     }
 
-    function flattening()
+    static function new(...$args)
+    {
+        return new self(...$args);
+    }
+
+    function get($key, $default = null)
+    {
+        return get($this->data, $key, $default);
+    }
+
+    function flatten()
     {
         $return = [];
         array_walk_recursive($this->data, function ($value, $key) use (&$return) {
@@ -212,4 +215,39 @@ function tap($value, $callback) {
 
 function value($value) {
     return $value instanceof Closure ? $value() : $value;
+}
+
+function get($array, $key, $default = null)
+{
+    if (is_null($key)) return $array;
+    if (isset($array[$key])) return $array[$key];
+    foreach (explode('.', $key) as $segment)
+    {
+        if ( ! is_array($array) || ! array_key_exists($segment, $array))
+        {
+            return value($default);
+        }
+        $array = $array[$segment];
+    }
+    return $array;
+}
+
+function set(&$array, $key, $value)
+{
+    if (is_null($key)) return $array = $value;
+    $keys = explode('.', $key);
+    while (count($keys) > 1)
+    {
+        $key = array_shift($keys);
+        // If the key doesn't exist at this depth, we will just create an empty array
+        // to hold the next value, allowing us to create the arrays to hold final
+        // values at the correct depth. Then we'll keep digging into the array.
+        if ( ! isset($array[$key]) || ! is_array($array[$key]))
+        {
+            $array[$key] = array();
+        }
+        $array =& $array[$key];
+    }
+    $array[array_shift($keys)] = $value;
+    return $array;
 }
